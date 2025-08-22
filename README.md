@@ -16,7 +16,7 @@ A Flask/Socket.IO dashboard to manage a live blocklist of words. Admins can add,
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/your-repo-name.git
+git clone https://github.com/ThanikaNatarajan/Keylogger-dashboard.git
 cd your-repo-name
 ```
 
