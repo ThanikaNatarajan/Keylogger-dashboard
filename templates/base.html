@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Keylogger Dashboard{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f9fafc;}
+        nav { background: #11182e; padding: 0 32px; height: 60px; display: flex; align-items: center; }
+        .nav-left { flex: 1; }
+        .nav-right { flex: 3; display: flex; justify-content: flex-end; gap: 24px; }
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 28px;
+            font-size: 1.05rem;
+        }
+        .nav-link.active, .nav-link:hover { text-decoration: underline; color: #6fbaf8;}
+        .main-container { max-width: 1200px; margin: 40px auto; padding: 30px; background: #fff; border-radius: 8px;}
+        @media (max-width: 800px) {
+            .main-container { padding: 10px; }
+            nav { flex-direction: column; height: auto;}
+            .nav-left, .nav-right { flex: unset; justify-content: center;}
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="/" class="nav-link" style="font-size: 1.28rem; font-weight: bold;">Keylogger Dashboard</a>
+        </div>
+        <div class="nav-right">
+            <a href="/history" class="nav-link{% if request.path == '/history' %} active{% endif %}">Blocked Word History</a>
+            <a href="/manage_blocked_words" class="nav-link{% if request.path == '/manage_blocked_words' %} active{% endif %}">Manage Blocked Words</a>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+    </nav>
+    <div class="main-container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
