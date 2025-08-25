@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Blocked Word History{% endblock %}
+
+{% block head %}
+<style>
+  .user-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 2.5em;
+  }
+  .user-box {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 5px 22px 0 rgba(44,62,80,0.09);
+    padding: 1.8em 1.2em 1.2em 1.2em;
+    min-width: 220px;
+    max-width: 260px;
+    text-align: left;
+    transition: box-shadow 0.15s;
+    border: 2px solid #eaf0fb;
+    position: relative;
+  }
+  .user-box:hover {
+    box-shadow: 0 8px 26px 0 rgba(44,62,80,0.18);
+    border-color: #bfcdda;
+  }
+  .user-title {
+    font-size: 1.25em;
+    font-weight: 700;
+    margin-bottom: .7em;
+    color: #2b445e;
+  }
+  .user-info {
+    margin-bottom: 0.35em;
+    color: #5b6c86;
+    font-size: 0.97em;
+  }
+  .user-status-online {
+    color: #26be88;
+    font-weight: 600;
+  }
+  .user-status-offline {
+    color: #e94e52;
+    font-weight: 600;
+  }
+  .user-history-link {
+    display: inline-block;
+    margin-top: 1.1em;
+    font-size: 1.06em;
+    color: #4364be;
+    text-decoration: none;
+    font-weight: 600;
+    background: #f2f6ff;
+    padding: 0.36em 0.85em;
+    border-radius: 8px;
+    transition: background .14s;
+  }
+  .user-history-link:hover { background: #dde9ff; color: #273c69;}
+  @media (max-width: 700px) {
+    .user-grid { flex-direction: column; align-items: center; gap: 18px;}
+    .user-box { max-width: 96vw; min-width: 70vw; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top:0.5em; color:#203050;">All Monitored Users</h2>
+<div class="user-grid">
+  {% for client in clients %}
+    <div class="user-box">
+      <div class="user-title">{{ client.client_name }}</div>
+      <div class="user-info"><strong>System Number:</strong> {{ client.system_number }}</div>
+      <div class="user-info"><strong>IP Address:</strong> {{ client.ip }}</div>
+      <div class="user-info">
+        <strong>Status:</strong>
+        <span class="user-status-{{ client.status|lower }}">{{ client.status }}</span>
+      </div>
+      <a href="{{ url_for('history_user', client_id=client.client_name) }}" class="user-history-link">
+        View Full History &rarr;
+      </a>
+    </div>
+  {% endfor %}
+  {% if clients|length == 0 %}
+    <p style="text-align:center; color:#94a3b8;">No users found.</p>
+  {% endif %}
+</div>
+{% endblock %}

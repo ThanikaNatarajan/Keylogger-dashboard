@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+import sqlite3
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -189,10 +190,41 @@ def logout():
 def history():
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("SELECT timestamp, client_id, word FROM history ORDER BY timestamp DESC")
-    history_records = c.fetchall()
+    # Select all columns for each client
+    c.execute("SELECT client_id, status, ip FROM clients ORDER BY client_id")
+    clients = []
+    for row in c.fetchall():
+        clients.append({
+            'client_name': row[0],  # client_id
+            'system_number': row[0],  # or however you define system number
+            'ip': row[2],
+            'status': 'Online' if row[1] == 'enabled' else 'Offline'
+        })
     conn.close()
-    return render_template('history.html', history_records=history_records)
+    return render_template('history_users.html', clients=clients)
+
+
+
+@app.route('/history/<client_id>')
+@login_required
+def history_user(client_id):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    # All incidents for the user (most recent first)
+    c.execute("""
+        SELECT word, COUNT(*) AS total_times, MAX(timestamp) AS last_time
+        FROM history
+        WHERE client_id = ?
+        GROUP BY word
+        ORDER BY total_times DESC, last_time DESC
+    """, (client_id,))
+    word_stats = [
+        {'word': row, 'total': row[1], 'last': row[2]}
+        for row in c.fetchall()
+    ]
+    conn.close()
+    return render_template('history_user.html', client_id=client_id, word_stats=word_stats)
+
 
 @app.route('/manage_blocked_words', methods=['GET', 'POST'])
 @login_required
