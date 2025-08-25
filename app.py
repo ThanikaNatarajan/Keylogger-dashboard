@@ -219,9 +219,10 @@ def history_user(client_id):
         ORDER BY total_times DESC, last_time DESC
     """, (client_id,))
     word_stats = [
-        {'word': row, 'total': row[1], 'last': row[2]}
-        for row in c.fetchall()
+    {'word': row[0], 'total': row[1], 'last': row[2]}
+    for row in c.fetchall()
     ]
+
     conn.close()
     return render_template('history_user.html', client_id=client_id, word_stats=word_stats)
 

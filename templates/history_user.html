@@ -1,26 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Blocked Words by {{ client_id }}{% endblock %}
-
+{% block title %}Blocked Word Incidents for {{ client_id }}{% endblock %}
 {% block content %}
-<h2>Blocked Word Incidents for <span style="color:#0070f3">{{ client_id }}</span></h2>
-<table border="1" cellpadding="8">
-   <tr>
-      <th>Blocked Word</th>
-      <th>Total Times</th>
-      <th>Most Recent</th>
-   </tr>
-   {% for entry in word_stats %}
-   <tr>
-      <td>{{ entry.word }}</td>
-      <td>{{ entry.total }}</td>
-      <td>{{ entry.last }}</td>
-   </tr>
-   {% endfor %}
-   {% if word_stats|length == 0 %}
-   <tr>
-      <td colspan="3">No blocked words for this user.</td>
-   </tr>
-   {% endif %}
-</table>
-<a href="{{ url_for('history') }}">&larr; Back to All Users</a>
+<div class="blocked-word-history">
+    <h2>
+        Blocked Word Incidents for <span style="color:#1976d2">{{ client_id }}</span>
+    </h2>
+    <table class="table-blocked-words">
+        <thead>
+            <tr>
+                <th>Blocked Word</th>
+                <th>Total Times</th>
+                <th>Most Recent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in word_stats %}
+            <tr>
+                <td>{{ entry.word }}</td>
+                <td>{{ entry.total }}</td>
+                <td>{{ entry.last }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('history') }}" style="margin-top:20px;display:inline-block;">← Back to All Users</a>
+</div>
 {% endblock %}
