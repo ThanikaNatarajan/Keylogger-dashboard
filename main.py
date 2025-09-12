@@ -103,7 +103,7 @@ def main():
         print("Waiting for blocked word list from server...")
 
     try:
-        sio.connect('http://127.0.0.1:5000')
+        sio.connect('http://localhost:5000') # This IP should be server IP
     except Exception as e:
         print(f"Failed to connect to server: {e}")
 
@@ -114,3 +114,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
