@@ -69,6 +69,24 @@ def handle_blocked_words_update(data):
     print('Received updated blocked words list')
     blocked_words = data['blocked_words']
     print('Blocked words now:', blocked_words)
+    
+@sio.on('system_disable')
+def handle_system_disable(data=None):
+    if not data or data.get('client_id') == client_id:
+        print("System disabled by admin command.")
+        show_overlay()
+
+@sio.on('system_enable')
+def handle_system_enable(data=None):
+    if not data or data.get('client_id') == client_id:
+        print("System enabled by admin command.")
+        # Remove overlay, unblock keys, reset status, etc.
+        keyboard.unblock_key('windows')
+        keyboard.unblock_key('ctrl')
+        keyboard.unblock_key('alt')
+        keyboard.unblock_key('space')
+        # If overlay is up, destroy it:
+        # try: root.destroy() except: pass
 
 def send_disabled_status(blocked_word):
     if sio.connected:
@@ -103,7 +121,7 @@ def main():
         print("Waiting for blocked word list from server...")
 
     try:
-        sio.connect('http://localhost:5000') # This IP should be server IP
+        sio.connect('http://10.130.21.213:5000') # This IP should be server IP
     except Exception as e:
         print(f"Failed to connect to server: {e}")
 

