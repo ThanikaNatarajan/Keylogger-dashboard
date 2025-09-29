@@ -111,18 +111,15 @@ def index():
 @app.route('/update_status', methods=['POST'])
 def update_status():
     data = request.get_json()
-    client_id = data.get("client_id")
     new_status = data.get("status", "enabled")
-    if client_id:
-        # Update status in DB
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
-        c.execute("UPDATE clients SET status = ? WHERE client_id = ?", (new_status, client_id))
-        conn.commit()
-        conn.close()
-        return {"message": f"Set status to {new_status} for {client_id}"}, 200
-    return {"error": "client_id required"}, 400
-
+    if new_status not in ["enabled", "disabled"]:
+        return {"error": "Invalid status value. Must be 'enabled' or 'disabled'."}, 400
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("UPDATE clients SET status = ?", (new_status,))
+    conn.commit()
+    conn.close()
+    return {"message": f"Set all client statuses to {new_status}"}, 200
 # ---- SocketIO Events ----
 
 @socketio.on('connect')

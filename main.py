@@ -106,8 +106,8 @@ def main():
         print("Waiting for blocked word list from server...")
 
     try:
-        # sio.connect('https://anything.anokxz.in')
-        sio.connect('http://localhost:5000')
+        """These should be the production and development env files."""
+        sio.connect('https://anything.anokxz.in')
     except Exception as e:
         print(f"Failed to connect to server: {e}")
 
