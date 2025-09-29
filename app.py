@@ -152,6 +152,26 @@ def handle_blocked_words_request():
     words_list = read_blocked_words()
     emit('blocked_words_update', {'blocked_words': words_list})
 
+@socketio.on('disable_all')
+def disable_all():
+    emit('system_disable', broadcast=True)
+
+@socketio.on('enable_all')
+def enable_all():
+    emit('system_enable', broadcast=True)
+
+@socketio.on('disable_client')
+def disable_client(data):
+    client_id = data['client_id']
+    emit('system_disable', {'client_id': client_id}, broadcast=True)
+    set_client_status(client_id, 'disabled', '', '')
+
+@socketio.on('enable_client')
+def enable_client(data):
+    client_id = data['client_id']
+    emit('system_enable', {'client_id': client_id}, broadcast=True)
+    set_client_status(client_id, 'enabled', '', '')
+
 # ------------- Authentication Routes -------------
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -236,6 +256,33 @@ def history_user(client_id):
     conn.close()
     return render_template('history_user.html', client_id=client_id, word_stats=word_stats)
 
+@app.route('/disable_all', methods=['POST'])
+@login_required
+def disable_all_route():
+    socketio.emit('system_disable')
+    # Update the DB statuses as needed.
+    return redirect(url_for('index'))
+
+@app.route('/enable_all', methods=['POST'])
+@login_required
+def enable_all_route():
+    socketio.emit('system_enable')
+    # Update the DB statuses as needed.
+    return redirect(url_for('index'))
+
+@app.route('/disable/<client_id>', methods=['POST'])
+@login_required
+def disable_user_route(client_id):
+    socketio.emit('system_disable', {'client_id': client_id})
+    set_client_status(client_id, 'disabled', '', '')
+    return redirect(url_for('history'))
+
+@app.route('/enable/<client_id>', methods=['POST'])
+@login_required
+def enable_user_route(client_id):
+    socketio.emit('system_enable', {'client_id': client_id})
+    set_client_status(client_id, 'enabled', '', '')
+    return redirect(url_for('history'))
 
 @app.route('/manage_blocked_words', methods=['GET', 'POST'])
 @login_required

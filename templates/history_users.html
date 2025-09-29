@@ -29,7 +29,7 @@
   .user-title {
     font-size: 1.25em;
     font-weight: 700;
-    margin-bottom: .7em;
+    margin-bottom: 0.7em;
     color: #2b445e;
   }
   .user-info {
@@ -55,12 +55,42 @@
     background: #f2f6ff;
     padding: 0.36em 0.85em;
     border-radius: 8px;
-    transition: background .14s;
+    transition: background 0.14s;
   }
-  .user-history-link:hover { background: #dde9ff; color: #273c69;}
+  .user-history-link:hover {
+    background: #dde9ff;
+    color: #273c69;
+  }
+  form.inline-button {
+    display: inline;
+    margin-right: 10px;
+  }
+  form.inline-button button {
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    padding: 6px 12px;
+    font-weight: 600;
+    font-size: 0.9em;
+  }
+  form.inline-button button.disable-btn {
+    background-color: #ef4444;
+    color: white;
+  }
+  form.inline-button button.enable-btn {
+    background-color: #22c55e;
+    color: white;
+  }
   @media (max-width: 700px) {
-    .user-grid { flex-direction: column; align-items: center; gap: 18px;}
-    .user-box { max-width: 96vw; min-width: 70vw; }
+    .user-grid {
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .user-box {
+      max-width: 96vw;
+      min-width: 70vw;
+    }
   }
 </style>
 {% endblock %}
@@ -69,21 +99,29 @@
 <h2 style="text-align:center; margin-top:0.5em; color:#203050;">All Monitored Users</h2>
 <div class="user-grid">
   {% for client in clients %}
-    <div class="user-box">
-      <div class="user-title">{{ client.client_name }}</div>
-      <div class="user-info"><strong>System Number:</strong> {{ client.system_number }}</div>
-      <div class="user-info"><strong>IP Address:</strong> {{ client.ip }}</div>
-      <div class="user-info">
-        <strong>Status:</strong>
-        <span class="user-status-{{ client.status|lower }}">{{ client.status }}</span>
-      </div>
-      <a href="{{ url_for('history_user', client_id=client.client_name) }}" class="user-history-link">
-        View Full History &rarr;
-      </a>
+  <div class="user-box">
+    <div class="user-title">{{ client.client_name }}</div>
+    <div class="user-info"><strong>System Number:</strong> {{ client.system_number }}</div>
+    <div class="user-info"><strong>IP Address:</strong> {{ client.ip }}</div>
+    <div class="user-info">
+      <strong>Status:</strong>
+      <span class="user-status-{{ client.status|lower }}">{{ client.status }}</span>
     </div>
+    <div style="margin-top: 1em;">
+      <form method="post" action="{{ url_for('disable_user_route', client_id=client.client_name) }}" class="inline-button">
+        <button type="submit" class="disable-btn">Disable</button>
+      </form>
+      <form method="post" action="{{ url_for('enable_user_route', client_id=client.client_name) }}" class="inline-button">
+        <button type="submit" class="enable-btn">Enable</button>
+      </form>
+    </div>
+    <a href="{{ url_for('history_user', client_id=client.client_name) }}" class="user-history-link">
+      View Full History &rarr;
+    </a>
+  </div>
   {% endfor %}
   {% if clients|length == 0 %}
-    <p style="text-align:center; color:#94a3b8;">No users found.</p>
+  <p style="text-align:center; color:#94a3b8;">No users found.</p>
   {% endif %}
 </div>
 {% endblock %}
