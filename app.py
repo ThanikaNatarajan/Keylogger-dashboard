@@ -5,7 +5,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, emit
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-import sqlite3
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -90,6 +89,11 @@ init_db()
 BLOCKED_WORDS_FILE = os.path.join(os.path.dirname(__file__), 'blocked_words.json')
 
 def read_blocked_words():
+    # Try to read blocked_words.json, create if missing
+    if not os.path.exists(BLOCKED_WORDS_FILE):
+        with open(BLOCKED_WORDS_FILE, 'w') as f:
+            json.dump({"blocked_words": []}, f, indent=2)
+        return []
     with open(BLOCKED_WORDS_FILE, 'r') as f:
         data = json.load(f)
     return data.get("blocked_words", [])
@@ -108,8 +112,14 @@ def index():
 def update_status():
     data = request.get_json()
     new_status = data.get("status", "enabled")
-    return {"message": f"Set status to {new_status}"}, 200
-
+    if new_status not in ["enabled", "disabled"]:
+        return {"error": "Invalid status value. Must be 'enabled' or 'disabled'."}, 400
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("UPDATE clients SET status = ?", (new_status,))
+    conn.commit()
+    conn.close()
+    return {"message": f"Set all client statuses to {new_status}"}, 200
 # ---- SocketIO Events ----
 
 @socketio.on('connect')
@@ -297,7 +307,8 @@ def manage_blocked_words():
         elif action == 'edit':
             old_word = request.form.get('old_word', '')
             new_word = request.form.get('new_word', '').strip()
-            if old_word in words_list and new_word:
+            # Prevent duplicate blocked words on edit
+            if old_word in words_list and new_word and new_word.lower() not in [w.lower() for w in words_list if w != old_word]:
                 updated_list = []
                 for w in words_list:
                     if w == old_word:
