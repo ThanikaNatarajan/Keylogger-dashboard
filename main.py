@@ -7,6 +7,20 @@ import keyboard  # Requires admin
 import socketio
 from pynput import keyboard as pynput_keyboard
 import os
+import sys
+
+
+def resource_path(relative_path: str) -> str:
+    """Return an absolute path to a resource, working for dev and for PyInstaller onefile.
+
+    When packaged with PyInstaller --onefile, files added with --add-data are extracted to
+    a temporary folder available via sys._MEIPASS. In normal execution use the script dir.
+    """
+    if getattr(sys, "frozen", False):
+        base_path = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
+    else:
+        base_path = os.path.dirname(__file__)
+    return os.path.join(base_path, relative_path)
 
 blocked_words = []   # Global - always updated by the server
 
@@ -116,11 +130,14 @@ def on_press(key):
 
 def main():
     global blocked_words
+    # Try to load initial blocked words from a local file. When running as a
+    # PyInstaller-built EXE, use resource_path to find bundled files.
     try:
-        with open('blocked_words.json', 'r') as f:
+        bw_path = resource_path('blocked_words.json')
+        with open(bw_path, 'r') as f:
             blocked_words_data = json.load(f)
-            blocked_words = blocked_words_data['blocked_words']
-    except Exception as e:
+            blocked_words = blocked_words_data.get('blocked_words', [])
+    except Exception:
         print("Waiting for blocked word list from server...")
 
     try:
@@ -132,6 +149,5 @@ def main():
     with pynput_keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
-if __name__ == '__main__':
-    main()
+main()
 
