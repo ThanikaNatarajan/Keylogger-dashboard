@@ -1,0 +1,14 @@
+services:
+  server:
+    image: keylogger-dashboard:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    # Bind-mount only the SQLite database file to avoid overwriting the app directory
+    volumes:
+      - ./data/clients.db:/app/clients.db
+    restart: unless-stopped
+    environment:
+      - FLASK_ENV=production

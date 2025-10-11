@@ -8,6 +8,7 @@ dependencies = [
     "flask>=3.1.2",
     "flask-socketio>=5.5.1",
     "keyboard>=0.13.5",
+    "pyinstaller>=6.16.0",
     "pynput>=1.8.1",
     "python-socketio>=5.13.0",
     "requests>=2.32.5",

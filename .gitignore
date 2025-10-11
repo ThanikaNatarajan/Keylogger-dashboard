@@ -1,1 +1,7 @@
 *.db
+build/
+dist/
+data/
+__pycache__/
+.venv/
+.env

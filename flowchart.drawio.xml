@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36" version="28.2.5">
+  <diagram name="Keylogger Dashboard Flow" id="5QHkDb-qnSzVvcb2ogwU">
+    <mxGraphModel dx="2316" dy="2020" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="light-dark(#FFFFFF,#020C12)" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qwpXpbPsz1ucjer5_URk-51" value="Admin (Web Dashboard)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#daeaff;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-52" value="Flask Server" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-53" value="Python Client(s)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f5e3;" vertex="1" parent="1">
+          <mxGeometry x="640" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-54" value="SQLite DB" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f9ebea;" vertex="1" parent="1">
+          <mxGeometry x="280" y="-110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-55" value="Login/Register" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-51" target="qwpXpbPsz1ucjer5_URk-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-56" value="Manage Blocked Words" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-51" target="qwpXpbPsz1ucjer5_URk-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-57" value="Broadcast Blocklist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-52" target="qwpXpbPsz1ucjer5_URk-53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-58" value="Request Blocklist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-53" target="qwpXpbPsz1ucjer5_URk-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-59" value="Send Status/Incident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-53" target="qwpXpbPsz1ucjer5_URk-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-60" value="Log Incident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-52" target="qwpXpbPsz1ucjer5_URk-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-61" value="Show History/Status" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-52" target="qwpXpbPsz1ucjer5_URk-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-62" value="Enable/Disable Clients" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-51" target="qwpXpbPsz1ucjer5_URk-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-63" value="Broadcast Enable/Disable" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-52" target="qwpXpbPsz1ucjer5_URk-53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-64" value="Monitor Keyboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f5e3;" vertex="1" parent="1">
+          <mxGeometry x="860" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-65" value="Blocked Word Detected?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f7cac9;" vertex="1" parent="1">
+          <mxGeometry x="880" y="180" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-66" value="Lock System (Overlay)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5eef8;" vertex="1" parent="1">
+          <mxGeometry x="580" y="180" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-67" value="Wait for Admin Password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5eef8;" vertex="1" parent="1">
+          <mxGeometry x="580" y="260" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-68" value="Unlock System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5eef8;" vertex="1" parent="1">
+          <mxGeometry x="580" y="340" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-69" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-53" target="qwpXpbPsz1ucjer5_URk-64">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-70" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-64" target="qwpXpbPsz1ucjer5_URk-65">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-71" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-65" target="qwpXpbPsz1ucjer5_URk-64">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-72" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-65" target="qwpXpbPsz1ucjer5_URk-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-73" value="Send Incident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-66" target="qwpXpbPsz1ucjer5_URk-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-74" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-66" target="qwpXpbPsz1ucjer5_URk-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qwpXpbPsz1ucjer5_URk-75" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="qwpXpbPsz1ucjer5_URk-67" target="qwpXpbPsz1ucjer5_URk-68">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
