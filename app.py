@@ -48,7 +48,7 @@ def create_history_table(conn):
     c.execute('''CREATE TABLE IF NOT EXISTS history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         client_id TEXT NOT NULL,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        timestamp DATETIME DEFAULT (datetime('now','localtime')),
         word TEXT NOT NULL,
         FOREIGN KEY (client_id) REFERENCES clients(client_id)
     )''')

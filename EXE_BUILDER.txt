@@ -1,0 +1,3 @@
+pyinstaller --onefile --noconsole --add-data "blocked_words.json;." --hidden-import=pynput --hidden-import=keyboard main.py
+
+pyinstaller --onefile --add-data "blocked_words.json;." --hidden-import=pynput --hidden-import=keyboard main.py

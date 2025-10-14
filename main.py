@@ -126,9 +126,11 @@ def disconnect():
 
 @sio.on('blocked_words_update')
 def handle_blocked_words_update(data):
-    global blocked_words
+    global blocked_words, key_buffer
     print('Received updated blocked words list')
     blocked_words = data['blocked_words']
+    # Clear typing buffer to avoid immediately matching an already-typed word
+    key_buffer = ''
     print('Blocked words now:', blocked_words)
     
 @sio.on('system_disable')
