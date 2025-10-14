@@ -24,6 +24,13 @@ def resource_path(relative_path: str) -> str:
 
 blocked_words = []   # Global - always updated by the server
 
+# Overlay control
+import queue
+
+overlay_queue = None  # type: ignore
+overlay_root = None  # type: ignore
+keys_blocked = False
+
 sio = socketio.Client()
 
 username = os.getlogin()
@@ -36,10 +43,11 @@ def show_overlay():
     def check_password():
         if password_entry.get() == "ADMIN":
             root.destroy()
-            keyboard.unblock_key('windows')
-            keyboard.unblock_key('ctrl')
-            keyboard.unblock_key('alt')
-            keyboard.unblock_key('space')
+            # Safely unblock keys — unblocking a key that isn't blocked may raise KeyError
+            safe_unblock_key('windows')
+            safe_unblock_key('ctrl')
+            safe_unblock_key('alt')
+            safe_unblock_key('space')
             if sio.connected:
                 sio.emit('status', {'client_id': client_id, 'status': 'enabled'})
                 print("Sent 'enabled' status to server")
@@ -51,10 +59,31 @@ def show_overlay():
     root.attributes('-topmost', True)
     root.protocol("WM_DELETE_WINDOW", lambda: None)
 
-    keyboard.block_key('windows')
-    keyboard.block_key('ctrl')
-    keyboard.block_key('alt')
-    keyboard.block_key('space')
+    # Initialize overlay control queue and root so other threads can request close
+    global overlay_queue, overlay_root, keys_blocked
+    overlay_queue = queue.Queue()
+    overlay_root = root
+
+    # Block keys if not already blocked and mark state
+    safe_block_key('windows')
+    safe_block_key('ctrl')
+    safe_block_key('alt')
+    safe_block_key('space')
+    keys_blocked = True
+
+    # Poll the overlay_queue periodically; if 'destroy' is received, close overlay
+    def _poll_overlay_queue():
+        try:
+            cmd = overlay_queue.get_nowait()
+        except Exception:
+            cmd = None
+        if cmd == 'destroy':
+            try:
+                root.destroy()
+            except Exception:
+                pass
+            return
+        root.after(200, _poll_overlay_queue)
 
     label = tk.Label(root, text="System Disabled", font=("Helvetica", 48))
     label.pack(pady=50)
@@ -68,7 +97,22 @@ def show_overlay():
     submit_button = tk.Button(root, text="Submit", command=check_password, font=("Helvetica", 24))
     submit_button.pack(pady=20)
 
+    # start polling and run the overlay
+    root.after(200, _poll_overlay_queue)
     root.mainloop()
+
+    # After overlay closes, ensure keys are unblocked and clear overlay controls
+    try:
+        safe_unblock_key('windows')
+        safe_unblock_key('ctrl')
+        safe_unblock_key('alt')
+        safe_unblock_key('space')
+    except Exception:
+        pass
+    # Clear overlay controls (variables are already declared global at function start)
+    overlay_queue = None
+    overlay_root = None
+    keys_blocked = False
 
 @sio.event
 def connect():
@@ -98,12 +142,49 @@ def handle_system_enable(data=None):
     if not data or data.get('client_id') == client_id:
         print("System enabled by admin command.")
         # Remove overlay, unblock keys, reset status, etc.
-        keyboard.unblock_key('windows')
-        keyboard.unblock_key('ctrl')
-        keyboard.unblock_key('alt')
-        keyboard.unblock_key('space')
+        # If overlay is active, ask it to close via the queue (thread-safe)
+        global overlay_queue
+        if overlay_queue is not None:
+            try:
+                overlay_queue.put('destroy')
+            except Exception:
+                pass
+        # Also attempt to unblock keys safely
+        safe_unblock_key('windows')
+        safe_unblock_key('ctrl')
+        safe_unblock_key('alt')
+        safe_unblock_key('space')
         # If overlay is up, destroy it:
         # try: root.destroy() except: pass
+
+
+def safe_unblock_key(key_name: str) -> None:
+    """Attempt to unblock a key but ignore KeyError if the key wasn't blocked.
+
+    The `keyboard` library raises KeyError when unhooking/unblocking a key that
+    isn't currently hooked/blocked. Wrapping in try/except avoids crashing the
+    Tkinter callback or event handler.
+    """
+    try:
+        keyboard.unblock_key(key_name)
+    except KeyError:
+        # Key wasn't blocked — ignore silently
+        pass
+
+
+def safe_block_key(key_name: str) -> None:
+    """Block a key only if it's not already blocked (use global keys_blocked flag).
+
+    This avoids attempting to block keys repeatedly and keeps a simple local state.
+    """
+    global keys_blocked
+    try:
+        if not keys_blocked:
+            keyboard.block_key(key_name)
+    except Exception:
+        # ignore blocking errors — best-effort
+        pass
+
 
 def send_disabled_status(blocked_word):
     if sio.connected:
