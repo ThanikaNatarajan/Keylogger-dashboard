@@ -64,6 +64,10 @@ Install all dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+## 🎬 Demo
+
+<video src="https://github.com/ThanikaNatarajan/Keylogger-dashboard/raw/main/Keylogger_demo.mp4" controls width="640"></video>
+
 
 ## Security & Legal
 
